@@ -1,0 +1,31 @@
+name: Node Daily Cron Task
+
+on:
+  schedule:
+    # 分 时 日 月 周 【UTC时间】
+    - cron: '0 1 * * *'
+  # 支持网页手动触发测试
+  workflow_dispatch:
+
+jobs:
+  run-node-task:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # 改成你项目对应的node版本，比如 20, 18
+          node-version: 20
+          cache: 'npm' # 缓存node_modules，加快构建
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run node script
+        run: node index.js
+        # 如果需要密钥，在这里配置env
+        # env:
+        #   TOKEN: ${{ secrets.MY_TOKEN }}
