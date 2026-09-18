@@ -2,7 +2,8 @@ name: Node Daily Cron Task
 
 on:
   schedule:
-    - cron: '0 2 * * *' # UTC 02:00 = 北京时间10点
+    # UTC 02:00 → 北京时间 10:00
+    - cron: '0 2 * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,10 +17,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # 删掉 cache: 'npm' 这一行！不再要求lock文件
+          # 重点：这里没有 cache: 'npm'，不再要求 package-lock.json
 
       - name: Install dependencies
         run: npm install
 
       - name: Run node script
-        run: node index.js
+        run: node index.js > run.log 2>&1
+
+      - name: Upload log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: task-log
+          path: run.log
