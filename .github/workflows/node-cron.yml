@@ -2,9 +2,7 @@ name: Node Daily Cron Task
 
 on:
   schedule:
-    # UTC 02:00 → 北京时间 10:00 每天执行
-    - cron: '0 2 * * *'
-  # 支持网页手动 Run workflow 测试
+    - cron: '0 2 * * *' # UTC 02:00 = 北京时间10点
   workflow_dispatch:
 
 jobs:
@@ -18,13 +16,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm' # 缓存依赖，加速npm install
+          # 删掉 cache: 'npm' 这一行！不再要求lock文件
 
       - name: Install dependencies
         run: npm install
 
       - name: Run node script
         run: node index.js
-        # 有密钥就取消下面注释
-        # env:
-        #   MY_TOKEN: ${{ secrets.MY_TOKEN }}
